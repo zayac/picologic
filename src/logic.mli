@@ -56,14 +56,20 @@ val evaluate : bool String.Map.t -> t -> bool option
 (** Reduces and simplifies the expression *)
 val simplify : t -> t
 
-(* Returns variables present in the expression *)
+(** Returns variables present in the expression *)
 val vars : t -> String.Set.t
 
-(* Transforms the expression to the negation normal form (NNF).  May result in
-   exponential growth.  *)
+(** Transforms the expression to the negation normal form (NNF).  May result
+    in exponential growth.  *)
 val nnf : t -> t
 
-(* Transforms the expression to the conjuctive normal form (CNF).  May result in
-   exponential growth.  *)
+(** Transforms the expression to the conjuctive normal form (CNF).  May result
+    in exponential growth.  *)
 val cnf : t -> t
 
+(** Transforms the expression to a simplified version of the DIMACS format,
+    which is typically expected by SAT solvers as the input format.  Thu
+    function returns a list representing the transformed expression and
+    a mapping from integers in the list to variable names in the original
+    expression. *)
+val to_dimacs : t -> int list list * string Int.Map.t

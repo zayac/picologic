@@ -154,3 +154,43 @@ let rec cnf t =
   | And (t, t') -> And (cnf t, cnf t')
   | Or (t, t') -> dis (cnf t) (cnf t')
   | t -> t
+
+(** [disj_to_dimacs c m t] is a helper function that represents a disjunction
+    [t] in the DIMACS format.  [c] is the next integer that is available for
+    variable enumeration and [m] is a hash table that stores correspondence
+    between variable names and integers that represent the variables in the
+    DIMACS format. *)
+let rec disj_to_dimacs counter map t =
+  let add_variable s mult =
+    match String.Map.find map s with
+    | None ->
+      let new_map = String.Map.add map ~key:s ~data:counter in
+      Int.(counter + 1), new_map, [Int.(mult * counter)]
+    | Some value ->
+      counter, map, [Int.(mult * value)] in
+  match t with
+  | Var s -> add_variable s 1
+  | Not (Var s) -> add_variable s Int.(~-1)
+  | Or (t, t') ->
+    let new_counter, new_map, l = disj_to_dimacs counter map t in
+    let new_counter, new_map, l' = disj_to_dimacs new_counter new_map t' in
+    new_counter, new_map, l @ l'
+  | _ -> raise (Failure "CNF transformation went wrong")
+
+let to_dimacs t =
+  let t = cnf (simplify t) in
+  let rec conj_to_dimacs counter map = function
+    | True -> counter, map, []
+    | False -> counter, map, [[]]
+    | Var _ | Not (Var _) | Or _ as t ->
+      let c, m, l = disj_to_dimacs counter map t in
+      c, m, [l]
+    | And (t, t') ->
+      let new_counter, new_map, l = conj_to_dimacs counter map t in
+      let new_counter, new_map, l' = conj_to_dimacs new_counter new_map t' in
+      new_counter, new_map, l @ l'
+  | _ -> raise (Failure "CNF transformation went wrong") in
+  let _, map, lst = conj_to_dimacs 1 String.Map.empty t in
+  let alist = String.Map.to_alist map in
+  let alist = List.map alist ~f:(fun (x, y) -> (y, x)) in
+  lst, Int.Map.of_alist_exn alist (* exception cannot be raised *)
