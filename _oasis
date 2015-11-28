@@ -32,5 +32,13 @@ Executable test_logic
   BuildDepends:  oUnit,
                  picologic
 
+Document picologic
+  Title:              API reference
+  InstallDir:         $htmldir/picologic
+  Type:               ocamlbuild(0.4)
+  BuildTools:         ocamldoc
+  XOCamlbuildPath:    src/
+  XOCamlbuildModules: Logic, Picosat, Sat
+
 Test logic
   Command:       $test_logic
