@@ -1,0 +1,8 @@
+(* OASIS_START *)
+(* DO NOT EDIT (digest: 48e25a3baa64bcbd40ae8ae7dca03f20) *)
+
+Authors of picologic:
+
+* Pavel Zaichenkov <zaichenkov@gmail.com>
+
+(* OASIS_STOP *)

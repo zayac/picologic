@@ -1,0 +1,23 @@
+OASISFormat: 0.4
+Name:        picologic
+Version:     0.1
+Synopsis:    Lightweight logic library for OCaml
+Authors:     Pavel Zaichenkov <zaichenkov@gmail.com>
+License:     MIT
+Homepage:    https://github.com/zayac/picologic
+Plugins:     META (0.4), StdFiles (0.4), DevFiles (0.4)
+
+Library "picologic"
+  Path:          src
+  Modules:       Logic,
+                 Picosat,
+                 Picologic
+  BuildDepends:  core,
+                 sexplib.syntax,
+                 comparelib.syntax,
+                 threads,
+                 ctypes
+  BuildTools:    ocamlbuild,
+                 camlp4o
+  Install:       false
+
