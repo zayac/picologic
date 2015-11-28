@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 852b5a5f0e6319c4ed78590b052be4dd) *)
+(* DO NOT EDIT (digest: c1a96b6371014ad910dd22b2cce86cfc) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -609,8 +609,40 @@ let package_default =
   {
      MyOCamlbuildBase.lib_ocaml = [("picologic", ["src"], [])];
      lib_c = [];
-     flags = [];
-     includes = []
+     flags =
+       [
+          (["oasis_library_picologic_cclib"; "link"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ETest ("system", "linux"),
+                 S
+                   [
+                      A "-cclib";
+                      A "-Xlinker";
+                      A "-cclib";
+                      A "--no-as-needed";
+                      A "-cclib";
+                      A "-lpicosat"
+                   ]);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-cclib"; A "-lpicosat"])
+            ]);
+          (["oasis_library_picologic_cclib"; "ocamlmklib"; "c"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ETest ("system", "linux"),
+                 S [A "-Xlinker"; A "--no-as-needed"; A "-lpicosat"]);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-lpicosat"])
+            ]);
+          (["oasis_library_picologic_dlllib"; "link"; "byte"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-dllib"; P "-lpicosat"])
+            ])
+       ];
+     includes = [("tests", ["src"])]
   }
   ;;
 
@@ -618,6 +650,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 622 "myocamlbuild.ml"
+# 654 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

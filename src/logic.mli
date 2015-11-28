@@ -39,8 +39,9 @@ val product: t list -> t
 
 (** {2 Basic functions } *)
 
-(** Converts the string to an expression.  *)
-val from_string : string -> t
+(** Converts the string to an expression.  Returns [None] if the string is
+    ill-formed.  The function is right-associative. *)
+val from_string : string -> t option
 (** Converts the expression to a string *)
 val to_string : t -> string
 (** Converts the expression to a string with logic unicode characters.  *)

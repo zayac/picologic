@@ -28,36 +28,48 @@ let product = function
   | [] -> True
   | hd :: [] -> hd
   | hd :: tl -> List.fold ~f:(fun acc x -> And (x, acc)) ~init:hd tl
+let var s = Var s
 
 let from_string s =
-  let open Genlex in
-  let lexer = make_lexer ["0"; "1"; "("; ")"; "+"; "~"; "*"; "->"; "<-";
-                          "<->"] in
-  let rec parse_expr = parser
-    | [< n1 = parse_atom; n2 = parse_remainder n1 >] -> n2
-  and parse_atom = parser
-    | [< 'String s >] -> Var s
-    | [< 'Kwd "0" >] -> False
-    | [< 'Kwd "1" >] -> True
-    | [< 'Kwd "~"; n = parse_expr >] -> ~-n
-    | [< 'Kwd "("; n = parse_expr; 'Kwd ")" >] -> n
-  and parse_remainder n1 = parser
-    | [< 'Kwd  "*"; n2 = parse_expr >] -> n1 * n2
-    | [< 'Kwd  "+"; n2 = parse_expr >] -> n1 + n2
-    | [< 'Kwd  "->"; n2 = parse_expr >] -> n1 ==> n2
-    | [< 'Kwd  "<-"; n2 = parse_expr >] -> n1 <== n2
-    | [< 'Kwd  "<->"; n2 = parse_expr >] -> n1 <=> n2
-    | [< >] -> n1 in
-  parse_expr (lexer (Stream.of_string s))
+  try
+    let open Genlex in
+    let lexer = make_lexer ["("; ")"; "+"; "~"; "*"; "->"; "<-";
+                            "<->"] in
+    let rec parse_expr = parser
+      | [< n1 = parse_atom; n2 = parse_remainder n1 >] -> n2
+    and parse_atom = parser
+      | [< 'Ident s >] -> Var s
+      | [< 'Int i >] ->
+          if Int.(i = 0) then False
+          else if Int.(i = 1) then True
+          else raise Stream.Failure
+      | [< 'Kwd "~"; n = parse_expr >] -> ~-n
+      | [< 'Kwd "("; n = parse_expr; 'Kwd ")" >] -> n
+    and parse_remainder n1 = parser
+      | [< 'Kwd  "*"; n2 = parse_expr >] -> n1 * n2
+      | [< 'Kwd  "+"; n2 = parse_expr >] -> n1 + n2
+      | [< 'Kwd  "->"; n2 = parse_expr >] -> n1 ==> n2
+      | [< 'Kwd  "<-"; n2 = parse_expr >] -> n1 <== n2
+      | [< 'Kwd  "<->"; n2 = parse_expr >] -> n1 <=> n2
+      | [< >] -> n1 in
+    Some (parse_expr (lexer (Stream.of_string s)))
+  with
+    Stream.Failure -> None
 
 let rec to_string_helper ?(sand="*") ?(sor="+") ?(snot="~") = function
   | False -> "0"
   | True -> "1"
-  | Not t -> Printf.sprintf "%s%s" snot (to_string_helper t)
+  | Not t -> Printf.sprintf "%s%s" snot (to_string_helper ~sand ~sor ~snot t)
   | And (t, t') ->
-    Printf.sprintf "(%s %s %s)" (to_string_helper t) sand (to_string_helper t')
+    Printf.sprintf "(%s %s %s)"
+      (to_string_helper ~sand ~sor ~snot t)
+      sand
+      (to_string_helper ~sand ~sor ~snot t')
   | Or (t, t') ->
-    Printf.sprintf "(%s %s %s)" (to_string_helper t) sor (to_string_helper t')
+    Printf.sprintf "(%s %s %s)"
+      (to_string_helper ~sand ~sor ~snot t)
+      sor
+      (to_string_helper ~sand ~sor ~snot t')
   | Var s -> s
 
 let to_string s = to_string_helper s

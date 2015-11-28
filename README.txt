@@ -1,8 +1,8 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 2f9b7baeb05dfe686dab231c8ccb8146) *)
+(* DO NOT EDIT (digest: 912884cd18d64a69ffe4445be0b6336c) *)
 
-picologic - Lightweight logic library for OCaml
-===============================================
+picologic - A lightweight logic library for OCaml
+=================================================
 
 See the file [INSTALL.txt](INSTALL.txt) for building and installation
 instructions.
