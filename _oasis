@@ -11,6 +11,7 @@ Library "picologic"
   Path:          src
   Modules:       Logic,
                  Picosat,
+                 Sat,
                  Picologic
   BuildDepends:  core,
                  sexplib.syntax,

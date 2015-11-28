@@ -12,7 +12,7 @@ let init =
 let add =
   foreign "picosat_add" (picosat @-> int @-> returning int)
 
-let sat psat limit =
+let sat =
   foreign "picosat_sat" (picosat @-> int @-> returning int)
 
 let deref =
