@@ -36,9 +36,19 @@ let test_string_conv _ =
     (to_pretty_string (Or (Var "x", Not (And (Var "x", Or (Var "y", And (True, False)))))))
     "(x ∨ ¬(x ∧ (y ∨ (1 ∧ 0))))"
 
+let test_is_ground _ =
+  let open Core.Std in
+  let open Logic in
+  assert_equal (is_ground False) true;
+  assert_equal (is_ground True) true;
+  assert_equal (is_ground (Option.value_exn (from_string "x + 0"))) false;
+  assert_equal (is_ground (Option.value_exn (from_string "x * 1"))) false;
+  assert_equal (is_ground (Option.value_exn (from_string "~1"))) true
+
 let suite = "Test Logic" >::: [
-    "Test logical operators"   >:: test_ops;
-    "Test string conversions"  >:: test_string_conv;
+    "Test logical operators"     >:: test_ops;
+    "Test string conversions"    >:: test_string_conv;
+    "Test 'is_ground' function"  >:: test_is_ground;
   ]
 
 let _ =

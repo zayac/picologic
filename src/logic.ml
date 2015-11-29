@@ -1,7 +1,6 @@
 open Core.Std
 
 module T = struct
-  type ident = string
   type t =
     | False
     | True
@@ -17,18 +16,18 @@ include Comparable.Make(T)
 let ( + ) t t' = Or (t, t')
 let ( * ) t t' = And (t, t')
 let ( ~- ) t = Not t
+let xor t t' = Or (And (t, Not t'), And (Not t, t'))
 let ( ==> ) t t' = Or (Not t, t')
 let ( <== ) t t' = Or (t, Not t')
 let ( <=> ) t t' = Or (And (t, t'), And (Not t, Not t'))
-let sum = function
+let rec sum = function
   | [] -> False
   | hd :: [] -> hd
-  | hd :: tl -> List.fold ~f:(fun acc x -> Or (x, acc)) ~init:hd tl
-let product = function
+  | hd :: tl -> Or (hd, sum tl)
+let rec product = function
   | [] -> True
   | hd :: [] -> hd
-  | hd :: tl -> List.fold ~f:(fun acc x -> And (x, acc)) ~init:hd tl
-let var s = Var s
+  | hd :: tl -> And (hd, product tl)
 
 let from_string s =
   try
@@ -76,12 +75,6 @@ let to_string s = to_string_helper s
 
 let to_pretty_string = to_string_helper ~sand:"∧" ~sor:"∨" ~snot:"¬"
 
-let rec is_ground = function
-  | False | True -> true
-  | Not t -> is_ground t
-  | Or (t, t')
-  | And (t, t') -> is_ground t && is_ground t'
-  | Var _ -> false
 
 let rec evaluate bools = function
   | True -> Some true
@@ -146,6 +139,8 @@ let rec vars = function
   | Not t -> vars t
   | And (t, t') | Or (t, t') ->
     String.Set.union (vars t) (vars t')
+
+let rec is_ground t = String.Set.is_empty (vars t)
 
 let rec nnf = function
   | Not (Not t) -> nnf t

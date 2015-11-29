@@ -11,6 +11,7 @@ BuildTools:  ocamlbuild
 Library picologic
   Path:          src
   Modules:       Logic,
+                 Cnf,
                  Picosat,
                  Sat
   BuildDepends:  core,

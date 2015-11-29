@@ -37,6 +37,9 @@ val ( <== ) : t -> t -> t
 (** Equivalence *)
 val ( <=> ) : t -> t -> t
 
+(** Exclusive disjunction *)
+val xor : t -> t -> t
+
 (** Disjunction *)
 val sum : t list -> t
 
@@ -46,17 +49,17 @@ val product: t list -> t
 
 (** {2 Basic functions } *)
 
-(** Converts the string to an expression.  Returns [None] if the string is
+(** Converts a string to an expression.  Returns [None] if the string is
     ill-formed.  The function is right-associative. *)
 val from_string : string -> t option
 
-(** Converts the expression to a string *)
+(** Converts an expression to a string *)
 val to_string : t -> string
 
-(** Converts the expression to a string with logic unicode characters.  *)
+(** Converts an expression to a string with logic unicode characters.  *)
 val to_pretty_string : t -> string
 
-(** [is_ground t] returns [true] if the logical expression does not contain
+(** [is_ground t] returns [true] if the expression [t] does not contain
     variables and [false] otherwise *)
 val is_ground : t -> bool
 
@@ -65,21 +68,21 @@ val is_ground : t -> bool
     present in [m], [None] is returned. *)
 val evaluate : bool String.Map.t -> t -> bool option
 
-(** Reduces and simplifies the expression *)
+(** Reduces and simplifies an expression *)
 val simplify : t -> t
 
-(** Returns variables present in the expression *)
+(** Returns variables present in an expression *)
 val vars : t -> String.Set.t
 
-(** Transforms the expression to the negation normal form (NNF).  May result
+(** Transforms an expression to the negation normal form (NNF).  May result
     in exponential growth.  *)
 val nnf : t -> t
 
-(** Transforms the expression to the conjuctive normal form (CNF).  May result
+(** Transforms an expression to the conjuctive normal form (CNF).  May result
     in exponential growth.  *)
 val cnf : t -> t
 
-(** Transforms the expression to a simplified version of the DIMACS format,
+(** Transforms an expression to a simplified version of the DIMACS format,
     which is typically expected by SAT solvers as the input format.  Thu
     function returns a list representing the transformed expression and
     a mapping from integers in the list to variable names in the original
