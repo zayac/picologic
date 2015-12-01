@@ -1,11 +1,11 @@
 open Core.Std
 
 module type Solvable = sig
-  type solver
-  val init : unit -> solver
-  val add : solver -> int -> int
-  val sat : solver -> int -> int
-  val deref : solver -> int -> int
+  type t
+  val init : unit -> t
+  val add : t -> int -> int
+  val sat : t -> int -> int
+  val deref : t -> int -> int
 end
 
 module Solver(S : Solvable) = struct
@@ -13,7 +13,7 @@ module Solver(S : Solvable) = struct
     let values = ref [] in
     for i = 1 to vars do
       let value = S.deref sat i in
-      if Int.(value <> 0) then values := value :: !values
+      if Int.(value <> 0) then values := !values @ [value]
       else raise (Invalid_argument "number of variables is wrong")
     done;
     !values
@@ -37,7 +37,7 @@ module Solver(S : Solvable) = struct
               ignore (S.add !sat Int.(~-1 * !counter * i));
               counter := Int.(!counter + 1)
             );
-          ignore (S.add !sat 0);
+          ignore (S.add !sat 0)
         else
           loop := false
       | 20 -> (* UNSATISFIABLE *)
@@ -51,4 +51,14 @@ module Solver(S : Solvable) = struct
 
   let solve ?(limit=Int.(~-1)) vars l = solve_helper ~limit l vars false
   let solve_all ?(limit=Int.(~-1)) vars l = solve_helper ~limit l vars true
+
+  let values =
+    let open Core.Std in
+    let produce_map =
+      List.fold ~init:(Int.Map.empty, 1)
+        ~f:(fun (map, key) el ->
+          Int.(Map.add map ~key ~data:(el > 0), key + 1)
+        ) in
+    List.map ~f:(fun el -> let r, _ = produce_map el in r)
+
 end

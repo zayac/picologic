@@ -33,6 +33,20 @@ Executable test_logic
   BuildDepends:  oUnit,
                  picologic
 
+Executable test_solver
+  Install:       false
+  Path:          tests
+  MainIs:        test_solver.ml
+  BuildDepends:  oUnit,
+                 ctypes.foreign,
+                 picologic
+  if system(linux)
+    CCLib:       -Xlinker --no-as-needed -lpicosat
+  else
+    DllLib:      -lpicosat
+    CCLib:       -lpicosat
+
+
 Document picologic
   Title:              API reference
   InstallDir:         $htmldir/picologic
@@ -43,3 +57,6 @@ Document picologic
 
 Test logic
   Command:       $test_logic
+
+Test solver
+  Command:       $test_solver

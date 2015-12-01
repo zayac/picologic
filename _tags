@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 42df5d91411061426bd910a010e74126)
+# DO NOT EDIT (digest: d81b1f6ac91db14082a181a551afc870)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -31,9 +31,21 @@ true: annot, bin_annot
 "tests/test_logic.byte": pkg_sexplib.syntax
 "tests/test_logic.byte": pkg_threads
 "tests/test_logic.byte": use_picologic
+# Executable test_solver
+"tests/test_solver.byte": oasis_executable_test_solver_cclib
+"tests/test_solver.byte": oasis_executable_test_solver_dlllib
+"tests/test_solver.byte": pkg_comparelib.syntax
+"tests/test_solver.byte": pkg_core
+"tests/test_solver.byte": pkg_ctypes
+"tests/test_solver.byte": pkg_ctypes.foreign
+"tests/test_solver.byte": pkg_oUnit
+"tests/test_solver.byte": pkg_sexplib.syntax
+"tests/test_solver.byte": pkg_threads
+"tests/test_solver.byte": use_picologic
 <tests/*.ml{,i,y}>: pkg_comparelib.syntax
 <tests/*.ml{,i,y}>: pkg_core
 <tests/*.ml{,i,y}>: pkg_ctypes
+<tests/*.ml{,i,y}>: pkg_ctypes.foreign
 <tests/*.ml{,i,y}>: pkg_oUnit
 <tests/*.ml{,i,y}>: pkg_sexplib.syntax
 <tests/*.ml{,i,y}>: pkg_threads

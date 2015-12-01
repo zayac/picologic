@@ -2,6 +2,7 @@
 open Ctypes
 
 type picosat = unit ptr
+type t = picosat
 let picosat : picosat typ = ptr void
 
 open Foreign

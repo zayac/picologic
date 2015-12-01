@@ -13,10 +13,10 @@ let test_ops _ =
     (Or (And (Var "x", Var "y"), And (Not (Var "x"), Not (Var "y"))));
   assert_equal
     (sum [Var "x"; True; Var "y"; False; Var "z"])
-    (Or (Var "z", Or (False, Or (Var "y", Or (True, Var "x")))));
+    (Or (Var "x", Or (True, Or (Var "y", Or (False, Var "z")))));
   assert_equal
     (product [Var "x"; True; Var "y"; False; Var "z"])
-    (And (Var "z", And (False, And (Var "y", And (True, Var "x")))));
+    (And (Var "x", And (True, And (Var "y", And (False, Var "z")))));
   assert_equal (sum []) False;
   assert_equal (product []) True
 
@@ -26,7 +26,7 @@ let test_string_conv _ =
   let open Logic in
   let e = from_string "x + ~x * y + (1 * 0)" in
   assert_equal e
-    (Some (Or (Var "x", Not (And (Var "x", Or (Var "y", And (True, False)))))));
+    (Some (Or (Var "x", And (Not (Var "x"), Or (Var "y", And (True, False))))));
 
   assert_equal
     (to_string (Or (Var "x", Not (And (Var "x", Or (Var "y", And (True, False)))))))

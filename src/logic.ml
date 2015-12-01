@@ -42,7 +42,7 @@ let from_string s =
           if Int.(i = 0) then False
           else if Int.(i = 1) then True
           else raise Stream.Failure
-      | [< 'Kwd "~"; n = parse_expr >] -> ~-n
+      | [< 'Kwd "~"; n = parse_atom >] -> ~-n
       | [< 'Kwd "("; n = parse_expr; 'Kwd ")" >] -> n
     and parse_remainder n1 = parser
       | [< 'Kwd  "*"; n2 = parse_expr >] -> n1 * n2

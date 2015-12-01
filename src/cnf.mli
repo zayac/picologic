@@ -48,7 +48,8 @@ val mk_true : t
 (** Constructs a logical expression consisting of one variable *)
 val mk_var : string -> t
 
-(** Converts a string to an expression.  Returns [None] if the string is ill-formed.  The function is right-associative.  *)
+(** Converts a string to an expression.  Returns [None] if the string is
+    ill-formed.  The function is right-associative.  *)
 val from_string : string -> t option
 
 (** Converts an expression to a string *)
@@ -70,15 +71,19 @@ val from_logic : Logic.t -> t
 (** Converts an expression from CNF to [Logic.t] *)
 val to_logic : t -> Logic.t
 
-(** [evaluate m t] substitutes variables in [t] with values from [m] and*)
-    (*evaluates the expression.  If there exist variables in [t] that are not*)
-    (*present in [m], [None] is returned. *)
+(** [evaluate m t] substitutes variables in [t] with values from [m] and
+    evaluates the expression.  If there exist variables in [t] that are not
+    present in [m], [None] is returned. *)
 val evaluate : bool String.Map.t -> t -> bool option
 
-(*(** Transforms an expression to a simplified version of the DIMACS format,*)
-    (*which is typically expected by SAT solvers as the input format.  Thu*)
-    (*function returns a list representing the transformed expression and*)
-    (*a mapping from integers in the list to variable names in the original*)
-    (*expression. *)*)
+(** [simplify t] simplifies [t] by removing meaningless tautologies and
+    contradictions from the expression. *)
+val simplify : t -> t
+
+(** Transforms an expression to a simplified version of the DIMACS format,
+    which is typically expected by SAT solvers as the input format.  Thu
+    function returns a list representing the transformed expression and
+    a mapping from integers in the list to variable names in the original
+    expression. *)
 val to_dimacs : t -> int list list * string Int.Map.t
 

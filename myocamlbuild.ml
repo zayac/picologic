@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: c1a96b6371014ad910dd22b2cce86cfc) *)
+(* DO NOT EDIT (digest: a128cef5ae5092fc6aa79381ab28f24e) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -640,6 +640,36 @@ let package_default =
                (OASISExpr.EBool true, S []);
                (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
                  S [A "-dllib"; P "-lpicosat"])
+            ]);
+          (["oasis_executable_test_solver_cclib"; "link"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ETest ("system", "linux"),
+                 S
+                   [
+                      A "-cclib";
+                      A "-Xlinker";
+                      A "-cclib";
+                      A "--no-as-needed";
+                      A "-cclib";
+                      A "-lpicosat"
+                   ]);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-cclib"; A "-lpicosat"])
+            ]);
+          (["oasis_executable_test_solver_cclib"; "ocamlmklib"; "c"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ETest ("system", "linux"),
+                 S [A "-Xlinker"; A "--no-as-needed"; A "-lpicosat"]);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-lpicosat"])
+            ]);
+          (["oasis_executable_test_solver_dlllib"; "link"; "byte"],
+            [
+               (OASISExpr.EBool true, S []);
+               (OASISExpr.ENot (OASISExpr.ETest ("system", "linux")),
+                 S [A "-dllib"; P "-lpicosat"])
             ])
        ];
      includes = [("tests", ["src"])]
@@ -650,6 +680,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 654 "myocamlbuild.ml"
+# 684 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

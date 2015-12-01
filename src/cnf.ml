@@ -150,4 +150,29 @@ let evaluate map =
     Atom.Set.fold ~init:(Some false) ~f:(select substitute) in
   CSet.fold ~init:(Some true) ~f:(select eval_set)
 
+(** Gets a name of a variable from an expression of type [Atom] *)
+let get_string = function
+  | Atom.AVar s | Atom.ANegVar s -> s
+
+let neg_atom = function
+  | Atom.AVar s -> Atom.ANegVar s
+  | Atom.ANegVar s -> Atom.AVar s
+
+let simplify =
+  let simplify_disj =
+      Atom.Set.fold ~init:Atom.Set.empty
+        ~f:(fun set el ->
+          let neg_el = neg_atom el in
+          if Atom.Set.mem set neg_el then Atom.Set.remove set neg_el
+          else Atom.Set.add set el
+        ) in
+  let neg_disj = Atom.Set.map ~f:neg_atom in
+  CSet.fold ~init:CSet.empty
+    ~f:(fun set el ->
+      let el = simplify_disj el in
+      let neg_el = neg_disj el in
+      if CSet.mem set neg_el then CSet.remove set neg_el
+      else CSet.add set el
+    )
+
 let to_dimacs t = Logic.to_dimacs (to_logic t)

@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 0ba368725c5c57afb4192ca33d5620f6) *)
+(* DO NOT EDIT (digest: 2c93c2048508b24c0d5daa10922c8042) *)
 
 This is the INSTALL file for the picologic distribution.
 
@@ -11,13 +11,13 @@ Dependencies
 
 In order to compile this package, you will need:
 
-* ocaml for all, test logic, doc picologic
+* ocaml for all, test logic, test solver, doc picologic
 * findlib
 * core for library picologic
 * sexplib for library picologic
 * comparelib for library picologic
-* ctypes for library picologic
-* oUnit for executable test_logic
+* ctypes for library picologic, executable test_solver
+* oUnit for executable test_logic, executable test_solver
 
 Installing
 ==========
