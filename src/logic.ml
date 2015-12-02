@@ -52,8 +52,7 @@ let from_string s =
       | [< 'Kwd  "<->"; n2 = parse_expr >] -> n1 <=> n2
       | [< >] -> n1 in
     Some (parse_expr (lexer (Stream.of_string s)))
-  with
-    Stream.Failure -> None
+  with _ -> None
 
 let rec to_string_helper ?(sand="*") ?(sor="+") ?(snot="~") = function
   | False -> "0"

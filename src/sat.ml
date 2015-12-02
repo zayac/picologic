@@ -13,10 +13,10 @@ module Solver(S : Solvable) = struct
     let values = ref [] in
     for i = 1 to vars do
       let value = S.deref sat i in
-      if Int.(value <> 0) then values := !values @ [value]
+      if Int.(value <> 0) then values := value :: !values
       else raise (Invalid_argument "number of variables is wrong")
     done;
-    !values
+    List.rev !values
 
   let solve_helper ?(limit=Int.(~-1)) x vars all_solutions =
     let sat = ref (S.init ()) in
