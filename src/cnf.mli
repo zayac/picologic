@@ -78,7 +78,7 @@ val evaluate : bool String.Map.t -> t -> bool option
 
 (** [simplify t] simplifies [t] by removing meaningless tautologies and
     contradictions from the expression. *)
-val simplify : t -> t
+(*val simplify : t -> t*)
 
 (** Transforms an expression to a simplified version of the DIMACS format,
     which is typically expected by SAT solvers as the input format.  Thu
